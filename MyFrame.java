@@ -14,7 +14,6 @@ public class MyFrame extends JFrame implements Runnable {
     int width = 400;
     int height = 400;
     JLabel dateLabel = new JLabel();
-    //LocalDateTime date;
     public static void main(String[] args) {
         MyFrame frame = new MyFrame("タイトル");
         frame.setVisible(true);
