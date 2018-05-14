@@ -7,18 +7,17 @@ import java.awt.Color;
 import java.awt.BorderLayout;
 import java.time.LocalDateTime;
 
+import java.awt.Graphics;
+import java.lang.Thread;
 
 
-
-public class MyFrame extends JFrame implements Runnable {
+public class MyFrame extends JFrame {
     int width = 400;
     int height = 400;
     JLabel dateLabel = new JLabel();
     public static void main(String[] args) {
         MyFrame frame = new MyFrame("タイトル");
         frame.setVisible(true);
-        Thread t = new Thread(frame);
-        t.start();
     }
 
     MyFrame(String title){
@@ -30,6 +29,8 @@ public class MyFrame extends JFrame implements Runnable {
         Container CP = getContentPane();
         //CP.setLayout(null);
 
+        MainPanel mainPanel = new MainPanel();
+        CP.add(mainPanel);
         JPanel panel = new JPanel();
         JButton startBtn = new JButton("Hello");
         startBtn.addActionListener(e -> System.out.println("Hello"));
@@ -38,25 +39,46 @@ public class MyFrame extends JFrame implements Runnable {
         JButton getTimeBtn = new JButton("What Time");
         getTimeBtn.addActionListener(e -> {
             dateLabel.setText(LocalDateTime.now().toString());
-            add(dateLabel);
+            CP.add(dateLabel, BorderLayout.SOUTH);
         });
         panel.add(startBtn);
         panel.add(stopBtn);
         panel.add(getTimeBtn);
         panel.setBackground(Color.ORANGE);
         CP.add(panel, BorderLayout.NORTH);
-        CP.add(dateLabel);
+        // CP.add(dateLabel);
+    }
+}
+class MainPanel extends JPanel implements Runnable {
+    JLabel dateLabel = new JLabel();
+    String dateString;
+    MainPanel(){
+        setBackground(Color.BLUE);
+        // add(dateLabel);
+        Thread t = new Thread(this);
+        t.start();
+    }
+    public JLabel getDateLabel(){
+        return this.dateLabel;
+    }
+    @Override
+    public void paintComponent(Graphics g){
+        System.out.println("Repaint!!!");
+        // dateLabel.setText("Hello");
+        this.add(dateLabel);
     }
     @Override
     public void run(){
-        int count = 1;
+        Integer count = 1;
         while (true) {
             System.out.println(count);
+            dateLabel.setText(count.toString());
             try{
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            repaint();
             count++;
         }
     }
